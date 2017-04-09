@@ -594,16 +594,18 @@ class GoogleMusic_Util(object):
                 genre_tracks.append(track)
 
         print "Found " + len(genre_tracks).__str__() + " tracks in genre: " + genre
-
         unrated_tracks = []
-        random.shuffle(genre_tracks)
+        genre_tracks.sort(key=operator.itemgetter('id'))
         genre_tracks.sort(key=operator.itemgetter('playCount'), reverse=True)
         for track in genre_tracks:
             if 'rating' in track.keys():
                 if track['rating'] == '0' or track['rating'] == '3':  # 0 or 3 stars is unrated
                     if len(unrated_tracks) < number_of_tracks:
                         if self.dry_run:
-                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
                         unrated_tracks.append(track['id'])
                     else:
                         break
