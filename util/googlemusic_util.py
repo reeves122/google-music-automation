@@ -440,13 +440,17 @@ class GoogleMusic_Util(object):
     def LeastPlayed(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of least played thumbs up tracks"
         least_played_tracks = []
-        random.shuffle(library)
+        library.sort(key=operator.itemgetter('id'))
         library.sort(key=operator.itemgetter('playCount'))
         for track in library:
             if 'rating' in track.keys():
                 if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
                     if len(least_played_tracks) < number_of_tracks:
-                        # print track['playCount'].__str__() + ': ' + track['artist'] + '-' + track['album'] + '-' + track['title']
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
                         least_played_tracks.append(track['id'])
                     else:
                         break
