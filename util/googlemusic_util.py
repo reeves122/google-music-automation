@@ -494,7 +494,7 @@ class GoogleMusic_Util(object):
         else:
             print "Failed!"
 
-    def LeastPlayedByGenre(self, library, playlists, genre, number_of_tracks=1000, thumbs_up_only=True):
+    def LeastPlayedByGenre(self, library, playlists, genre, number_of_tracks=1000):
         print "Creating playlist of least played tracks in genre: " + genre
         genre_tracks = []
         for track in library:
