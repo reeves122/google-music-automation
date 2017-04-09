@@ -475,7 +475,10 @@ class GoogleMusic_Util(object):
                         if track['genre'] not in excluded_genres:
                             if len(not_recently_played) < number_of_tracks:
                                 if self.dry_run:
-                                    print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                                    print 'Plays:', track['playCount'], ' - ', \
+                                                    track['artist'].encode('utf-8'), ' - ', \
+                                                    track['title'].encode('utf-8'), ' - ', \
+                                                    datetime.fromtimestamp(float(track['lastPlayed']))
                                 not_recently_played.append(track['id'])
                             else:
                                 break
