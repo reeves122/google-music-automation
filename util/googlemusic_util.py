@@ -68,18 +68,56 @@ class GoogleMusic_Util(object):
             print 'ERROR: List contains more than 1000 songs!'
             return False
 
-        # Get a list of all the user's playlists
-        all_playlists = self.api.get_all_playlists()
+        # Get the ID of the playlist if it already exists
+        playlist_id = self.GetPlaylistID(playlists, playlist_name)
+        if playlist_id is False:
+            if self.dry_run:
+                print "DRY-RUN: Would create playlist", playlist_name
+            else:
+                # Create a new playlist
+                playlist_id = self.api.create_playlist(playlist_name)
+                print "Created new playlist:", playlist_name
+            existing_tracks = [] # empty
+        else:
+            # Remove tracks from existing playlist if needed
+            existing_tracks = self.GetTracksInPlaylist(playlists, playlist_name)
+            tracks_to_remove = []
+            if len(existing_tracks) > 0:
+                for track in existing_tracks:
+                    if track['trackId'] not in list_of_songs:
+                        tracks_to_remove.append(track['id'])
 
-        # Search for the one to delete
-        for playlist in all_playlists:
-            if playlist['name'] == playlist_name:
-                print 'Deleting old playlist', playlist['name']
-                self.api.delete_playlist(playlist['id'])
+            if len(tracks_to_remove) > 0:
+                self.RemoveTracksFromPlaylist(tracks_to_remove)
 
-        # Create a new playlist
-        playlist_id = self.api.create_playlist(playlist_name)
-        self.api.add_songs_to_playlist(playlist_id, list_of_songs)
+        tracks_to_add = []
+        for new_track in list_of_songs:
+            if any(new_track == old_track['trackId'] for old_track in existing_tracks):
+                True # track already exists in playlist
+            else:
+                tracks_to_add.append(new_track)
+
+        if len(tracks_to_add) > 0:
+            print "Adding " + len(tracks_to_add).__str__() + " tracks to playlist..."
+            if self.dry_run:
+                print "DRY-RUN: Would add these songs to playlist", playlist_name
+            else:
+                for i in range(0, len(tracks_to_add), batch_size):
+                    for retries in range(0,5):
+                        try:
+                            tracks_added = self.api.add_songs_to_playlist(playlist_id, tracks_to_add[i:i+batch_size])
+                            #print "Successfully added " + len(tracks_added).__str__() + " tracks to playlist."
+                            #sleep(0.5)
+                        except:
+                            print "Error adding tracks. Trying again..."
+                            continue
+                        break
+            print "Successfully added " + len(tracks_to_add).__str__() + " tracks to playlist."
+        else:
+            print "No new tracks to add"
+        # Update playlist description
+        if not self.dry_run:
+            self.api.edit_playlist(playlist_id, new_description="Synced " + time.strftime('%m/%d/%Y, %I:%M:%S %p', time.localtime()))
         return True
 
     def LoadLocalLibrary(self, file_name):
