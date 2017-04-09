@@ -122,6 +122,23 @@ class GoogleMusic_Util(object):
 
     def LoadLocalLibrary(self, file_name):
         # Open library from previous run json file
+    def RemoveTracksFromPlaylist(self, list_of_tracks, batch_size=100):
+        print "Removing " + len(list_of_tracks).__str__() + ' tracks from playlist...'
+        if self.dry_run:
+            print "DRY-RUN: Not removing tracks from playlist"
+        else:
+            for i in range(0, len(list_of_tracks), batch_size):
+                for retries in range(0, 5):
+                    try:
+                        tracks_removed = self.api.remove_entries_from_playlist(list_of_tracks[i:i+batch_size])
+                        #print len(tracks_removed).__str__() + ' tracks removed from playlist.'
+                        #sleep(0.5)
+                    except:
+                        "Error removing tracks. Trying again..."
+                        continue
+                    break
+
+        print len(list_of_tracks).__str__() + ' tracks removed from playlist.'
         try:
             with open(file_name) as f:
                 library = []
