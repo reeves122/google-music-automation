@@ -428,6 +428,15 @@ class GoogleMusic_Util(object):
         print "Playlist not found: " + playlist_name
         return False
 
+    def GetTracksInPlaylist(self, list_of_playlists, playlist_name):
+        list_of_tracks = []
+        for playlist in list_of_playlists:
+            if playlist['name'] == playlist_name:
+                for track in playlist['tracks']:
+                    list_of_tracks.append(track)
+        print "Found " + len(list_of_tracks).__str__() + " tracks in existing playlist: " + playlist_name
+        return list_of_tracks
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
