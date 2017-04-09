@@ -678,6 +678,38 @@ class GoogleMusic_Util(object):
         else:
             print "Failed!"
 
+    def AlbumPlaylist(self, library, playlists, name, album_names, number_of_tracks=1000):
+        album_tracks = []
+        for track in library:
+            for album in album_names:
+                # Case-insentive matching
+                if album.lower() in track['album'].lower():
+                    album_tracks.append(track)
+
+        print "Found " + len(album_tracks).__str__() + " album tracks."
+        tracks_to_add = []
+        album_tracks.sort(key=operator.itemgetter('trackNumber'))
+        album_tracks.sort(key=operator.itemgetter('year', 'album'), reverse=True)
+        for track in album_tracks:
+            if 'rating' in track.keys():
+                if track['rating'] != '1': # 1 stars is thumbs down
+                    if len(tracks_to_add) < number_of_tracks:
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['album'].encode('utf-8'), ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
+                        tracks_to_add.append(track['id'])
+                    else:
+                        break
+
+        # Call function to add songs to playlist
+        if self.AddSongsToPlaylist(playlists, name, tracks_to_add):
+            print "Done!"
+        else:
+            print "Failed!"
+
     def UpdateLastPlayedDB(self, track):
         # Accepts one track (which is a new play) and updates the LastPlayed file.
         file_name = 'last_played.json'
