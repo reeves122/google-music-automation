@@ -464,10 +464,9 @@ class GoogleMusic_Util(object):
         else:
             print "Failed!"
 
-    def NotRecentlyPlayed(self, library, playlists, within_days=90, number_of_tracks=1000, excluded_genres=None):
-        genre_tracks.sort(key=operator.itemgetter('id'))
-        genre_tracks.sort(key=operator.itemgetter('lastPlayed'))
-
+    def NotRecentlyPlayed(self, library, playlists, number_of_tracks=1000, excluded_genres=None):
+        library.sort(key=operator.itemgetter('id'))
+        library.sort(key=operator.itemgetter('lastPlayed'))
         not_recently_played = []
         for track in library:
             if 'rating' in track.keys():
