@@ -566,18 +566,19 @@ class GoogleMusic_Util(object):
 
         genre_tracks.sort(key=operator.itemgetter('id'))
         genre_tracks.sort(key=operator.itemgetter('lastPlayed'))
-
         not_recently_played = []
         for track in genre_tracks:
             if 'rating' in track.keys():
                 if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
                     if len(not_recently_played) < number_of_tracks:
                         if self.dry_run:
-                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
                         not_recently_played.append(track['id'])
                     else:
                         break
-
 
         # Call function to add songs to playlist
         if self.AddSongsToPlaylist(playlists, genre + ' Not Recently Played', not_recently_played):
