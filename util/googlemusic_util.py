@@ -267,9 +267,8 @@ class GoogleMusic_Util(object):
                         # If a match is found, check if the playcount is higher
                         # now. First check if the playcount key even exists in
                         # new and old tracks. If the track has never been
-                        # played then the key will not exist.
-                        if 'playCount' in new_track.keys() \
-                          and 'playCount' in old_track.keys():
+                        # played then the key may not exist.
+                        if 'playCount' in new_track.keys() and 'playCount' in old_track.keys():
                             if new_track['playCount'] > old_track['playCount']:
                                 print "Found new track play:", new_track['artist'], '-', new_track['title']
                                 # Add track to scrobble list
