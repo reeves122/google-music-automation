@@ -357,6 +357,35 @@ class GoogleMusic_Util(object):
         except:
             print "There was a problem connecting to Last.FM."
 
+    def SyncLastFMPlayCount(self, library):
+        index = 1
+        for track in library:
+            try:
+                # If the playCount key doesnt exist for this track, set it to 0
+                if 'playCount' not in track.keys():
+                    track['playCount'] = 0
+
+                # Query Last.FM for the user's play count of this track
+                lastfm_plays = self.GetLastFMPlays(track)
+
+                # Debugging information
+                print index.__str__() + "/" + len(library).__str__() + " Last.fm: " + lastfm_plays.__str__() + \
+                      ", Google: " + track['playCount'].__str__() + ", " + track['artist'] \
+                      + ' - ' + track['album'] + ' - ' + track['title']
+
+                # If the Last.FM play count is higher, increment the Google music play count
+                if lastfm_plays > track['playCount']:
+                    self.SetPlayCount(track, lastfm_plays)
+
+                # If the Google Music play count is higher, scrobble the track to Last.FM
+                if track['playCount'] > lastfm_plays:
+                    self.ScrobbleTrack(track)
+
+                index += 1
+            except:
+                print index.__str__() + "/" + len(library).__str__() + " ERROR"
+                continue
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
