@@ -171,6 +171,55 @@ class GoogleMusic_Util(object):
 
         print "Done!"
         print
+    def DumpTracksToCSV(self, list_of_tracks, csv_file):
+        # print "Opening CSV for writing..."
+        # Open CSV file
+        f = open(csv_file, 'wt')
+
+        # Write header row
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow(('Artist', 'Album', 'Title', 'Genre', 'Plays', 'Rating'))
+
+        # Write each track to CSV
+        for track in list_of_tracks:
+
+            # Not all fields may be present and usable
+            try:
+                artist = (track['artist']).encode('utf-8')
+            except:
+                artist = ''
+
+            try:
+                album = (track['album']).encode('utf-8')
+            except:
+                album = ''
+
+            try:
+                title = (track['title']).encode('utf-8')
+            except:
+                title = ''
+
+            try:
+                genre = (track['genre']).encode('utf-8')
+            except:
+                genre = ''
+
+            try:
+                plays = track['playCount']
+            except:
+                plays = ''
+
+            try:
+                rating = track['rating']
+            except:
+                rating = ''
+
+
+            writer.writerow((artist, album, title, genre, plays, rating))
+
+        f.close()
+        print "Wrote " + len(list_of_tracks).__str__() + " total tracks to " + csv_file
+        # print
 
     def FilterForUnplayed(self, library):
         # Returns library of unplayed songs
