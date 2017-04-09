@@ -335,6 +335,28 @@ class GoogleMusic_Util(object):
         else:
             print "Error: Current plays is higher than value provided!"
 
+    def GetLastFMPlays(self, track):
+        try:
+            lastfm_username = os.environ.get('LASTFM_USERNAME')
+            lastfm_password = pylast.md5(os.environ.get('LASTFM_PASSWORD'))
+            lastfm_apikey = os.environ.get('LASTFM_APIKEY')
+            lastfm_apisecret = os.environ.get('LASTFM_APISECRET')
+
+            lastfm = pylast.LastFMNetwork(api_key=lastfm_apikey,
+                                          api_secret=lastfm_apisecret,
+                                          username=lastfm_username,
+                                          password_hash=lastfm_password)
+
+            lastfm_track = pylast.Track(artist=track['artist'],
+                                        title=track['title'],
+                                        network=lastfm,
+                                        username=lastfm_username)
+
+            time.sleep(0.5)
+            return lastfm_track.get_userplaycount()
+        except:
+            print "There was a problem connecting to Last.FM."
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
