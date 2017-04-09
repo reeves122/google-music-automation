@@ -186,8 +186,8 @@ class GoogleMusic_Util(object):
         except:
             print "ERROR: Unable to dump library to JSON file!"
 
-        print "Done!"
-        print
+        print "Wrote " + len(list_of_tracks).__str__() + " total tracks to " + json_file
+
     def DumpTracksToCSV(self, list_of_tracks, csv_file):
         # print "Opening CSV for writing..."
         # Open CSV file
