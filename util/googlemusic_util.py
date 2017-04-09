@@ -228,7 +228,6 @@ class GoogleMusic_Util(object):
             time.sleep(1)
         except:
             print "There was a problem scrobbling the track."
-    def ArtistPlaylist(self, library, playlists, artist, number_of_tracks=999):
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
