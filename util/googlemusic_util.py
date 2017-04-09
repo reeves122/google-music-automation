@@ -162,9 +162,11 @@ class GoogleMusic_Util(object):
         all_playlists = self.api.get_all_user_playlist_contents()
         print len(all_playlists), 'playlists detected.'
         return all_playlists
+
+    def DumpTracksToJSON(self, list_of_tracks, json_file):
         try:
-            with open(file_name, 'wb') as fp:
-                json.dump(all_playlists, fp)
+            with open(json_file, 'wb') as fp:
+                json.dump(list_of_tracks, fp)
                 fp.write('\n')
         except:
             print "ERROR: Unable to dump library to JSON file!"
