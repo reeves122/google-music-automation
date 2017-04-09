@@ -51,7 +51,7 @@ class GoogleMusic_Util(object):
             except:
                 print "ERROR: Unable to login with the credentials provided!"
                 sys.exit(1)
-        if dry_run == True:
+        if dry_run:
             print "Dry-run mode enabled. Logging only. No changes will be made."
             self.dry_run = True
         else:
