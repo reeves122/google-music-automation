@@ -620,14 +620,17 @@ class GoogleMusic_Util(object):
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
-        random.shuffle(library)
+        library.sort(key=operator.itemgetter('id'))
         library.sort(key=operator.itemgetter('playCount'), reverse=True)
         for track in library:
             if 'rating' in track.keys():
                 if track['rating'] == '0' or track['rating'] == '3':  # 0 or 3 stars is unrated
                     if len(unrated_tracks) < number_of_tracks:
                         if self.dry_run:
-                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
                         unrated_tracks.append(track['id'])
                     else:
                         break
