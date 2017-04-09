@@ -437,6 +437,25 @@ class GoogleMusic_Util(object):
         print "Found " + len(list_of_tracks).__str__() + " tracks in existing playlist: " + playlist_name
         return list_of_tracks
 
+    def LeastPlayed(self, library, playlists, number_of_tracks=1000):
+        print "Creating playlist of least played thumbs up tracks"
+        least_played_tracks = []
+        random.shuffle(library)
+        library.sort(key=operator.itemgetter('playCount'))
+        for track in library:
+            if 'rating' in track.keys():
+                if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
+                    if len(least_played_tracks) < number_of_tracks:
+                        # print track['playCount'].__str__() + ': ' + track['artist'] + '-' + track['album'] + '-' + track['title']
+                        least_played_tracks.append(track['id'])
+                    else:
+                        break
+
+        # Call function to add songs to playlist
+        if self.AddSongsToPlaylist(playlists, 'Thumbs Up Least Played', least_played_tracks):
+            print "Done!"
+        else:
+            print "Failed!"
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
