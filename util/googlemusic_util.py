@@ -524,7 +524,7 @@ class GoogleMusic_Util(object):
         else:
             print "Failed!"
 
-    def MostPlayedByGenre(self, library, playlists, genre, number_of_tracks=1000, thumbs_up_only=True):
+    def MostPlayedByGenre(self, library, playlists, genre, number_of_tracks=1000):
         print "Creating playlist of most played tracks in genre: " + genre
         genre_tracks = []
         for track in library:
@@ -534,26 +534,20 @@ class GoogleMusic_Util(object):
         print "Found " + len(genre_tracks).__str__() + " tracks in genre: " + genre
 
         most_played_tracks = []
-        if thumbs_up_only == True:
-            random.shuffle(genre_tracks)
-            genre_tracks.sort(key=operator.itemgetter('playCount'), reverse=True)
-            for track in genre_tracks:
-                if 'rating' in track.keys():
-                    if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
-                        if len(most_played_tracks) < number_of_tracks:
-                            if self.dry_run:
-                                print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
-                            most_played_tracks.append(track['id'])
-                        else:
-                            break
-        elif thumbs_up_only == False:
-            random.shuffle(genre_tracks)
-            genre_tracks.sort(key=operator.itemgetter('playCount'), reverse=True)
-            for track in genre_tracks:
-                if len(most_played_tracks) < number_of_tracks:
-                    most_played_tracks.append(track['id'])
-                else:
-                    break
+        genre_tracks.sort(key=operator.itemgetter('id'))
+        genre_tracks.sort(key=operator.itemgetter('playCount'), reverse=True)
+        for track in genre_tracks:
+            if 'rating' in track.keys():
+                if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
+                    if len(most_played_tracks) < number_of_tracks:
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
+                        most_played_tracks.append(track['id'])
+                    else:
+                        break
 
         # Call function to add songs to playlist
         if self.AddSongsToPlaylist(playlists, genre + ' Most Played', most_played_tracks):
