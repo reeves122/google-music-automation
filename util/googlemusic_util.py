@@ -156,13 +156,12 @@ class GoogleMusic_Util(object):
         print len(library), 'tracks detected.'
         return library
 
-    def DumpPlaylists(self, file_name):
+    def GetPlaylists(self):
         # Get all playlists including tracks in each
         print "Getting list of playlists..."
         all_playlists = self.api.get_all_user_playlist_contents()
         print len(all_playlists), 'playlists detected.'
-        print
-        print "Dumping playlists to JSON..."
+        return all_playlists
         try:
             with open(file_name, 'wb') as fp:
                 json.dump(all_playlists, fp)
