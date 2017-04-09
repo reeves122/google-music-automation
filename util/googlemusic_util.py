@@ -420,6 +420,14 @@ class GoogleMusic_Util(object):
             for item in new_scrobbles:
                 f.write("%s\n" % item)
 
+    def GetPlaylistID(self, list_of_playlists, playlist_name):
+        for playlist in list_of_playlists:
+            #print playlist['name']
+            if playlist['name'] == playlist_name:
+                return playlist['id']
+        print "Playlist not found: " + playlist_name
+        return False
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
