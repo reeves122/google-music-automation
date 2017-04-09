@@ -322,6 +322,19 @@ class GoogleMusic_Util(object):
             time.sleep(0.5)
         except:
             print "There was a problem scrobbling the track."
+
+    def SetPlayCount(self, track, new_plays):
+        if track['playCount'] < new_plays:
+            increment_count = new_plays - track['playCount']
+            print "incrementing play count by " + increment_count.__str__()
+            if self.dry_run:
+                print "DRY-RUN: Would increment playcount of", track['artist'] + '-' + track['album'] + '-' + track['title']
+            else:
+                self.api.increment_song_playcount(track['id'], plays=increment_count)
+                time.sleep(0.5)  # Throttle calls to Google API
+        else:
+            print "Error: Current plays is higher than value provided!"
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
