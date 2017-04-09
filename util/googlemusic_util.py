@@ -9,8 +9,6 @@ import time
 import random
 import operator
 import csv
-from time import sleep
-import itertools
 from datetime import datetime, timedelta
 
 # This class is a collection of useful methods for dealing with the unofficial
