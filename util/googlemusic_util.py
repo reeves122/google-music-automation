@@ -335,7 +335,7 @@ class GoogleMusic_Util(object):
                             title=track['title'],
                             timestamp=time_played)
 
-            time.sleep(1)
+            time.sleep(0.5)
         except:
             print "There was a problem scrobbling the track."
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
