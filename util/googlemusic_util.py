@@ -386,6 +386,40 @@ class GoogleMusic_Util(object):
                 print index.__str__() + "/" + len(library).__str__() + " ERROR"
                 continue
 
+    def ScrobbleRecentPlays(self, library):
+        previous_scrobbles = []
+        try:
+            # Load list of previous scrobbles (in epochs)
+            with open('previous_scrobbles.txt') as f:
+                previous_scrobbles = f.read().splitlines()
+                print "Previous scrobbles:", len(previous_scrobbles)
+                f.close()
+        except:
+            print
+
+        days_ago = 14
+        # Get epoch time from N days ago
+        start_time_window = time.mktime((datetime.now() - timedelta(days=days_ago)).timetuple())
+
+        new_scrobbles = []
+
+        for track in library:
+            time_played = (int(track['lastModifiedTimestamp']) / 1000000)
+            if time_played > start_time_window:
+                if time_played.__str__() not in previous_scrobbles:
+                    print 'Scrobbling track:', \
+                        track['artist'], '-', \
+                        track['title'], '-', \
+                        datetime.fromtimestamp(float(time_played))
+                    self.ScrobbleTrack(track)
+                    new_scrobbles.append(time_played.__str__())
+
+        # Write out new scrobbles to log
+        print "New scrobbles: ", len(new_scrobbles).__str__()
+        with open('previous_scrobbles.txt', 'a') as f:
+            for item in new_scrobbles:
+                f.write("%s\n" % item)
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
