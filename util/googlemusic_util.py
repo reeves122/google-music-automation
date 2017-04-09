@@ -120,8 +120,6 @@ class GoogleMusic_Util(object):
             self.api.edit_playlist(playlist_id, new_description="Synced " + time.strftime('%m/%d/%Y, %I:%M:%S %p', time.localtime()))
         return True
 
-    def LoadLocalLibrary(self, file_name):
-        # Open library from previous run json file
     def RemoveTracksFromPlaylist(self, list_of_tracks, batch_size=100):
         print "Removing " + len(list_of_tracks).__str__() + ' tracks from playlist...'
         if self.dry_run:
@@ -156,7 +154,6 @@ class GoogleMusic_Util(object):
         print "Getting library..."
         library = self.api.get_all_songs()
         print len(library), 'tracks detected.'
-        print
         return library
 
     def DumpPlaylists(self, file_name):
