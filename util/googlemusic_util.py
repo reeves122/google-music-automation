@@ -502,29 +502,22 @@ class GoogleMusic_Util(object):
                 genre_tracks.append(track)
 
         print "Found " + len(genre_tracks).__str__() + " tracks in genre: " + genre
-
         least_played_tracks = []
-        if thumbs_up_only == True:
-            random.shuffle(genre_tracks)
-            genre_tracks.sort(key=operator.itemgetter('playCount'))
-            for track in genre_tracks:
-                if 'rating' in track.keys():
-                    if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
-                        if len(least_played_tracks) < number_of_tracks:
-                            if self.dry_run:
-                                print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
-                            least_played_tracks.append(track['id'])
-                        else:
-                            break
-        elif thumbs_up_only == False:
-            random.shuffle(genre_tracks)
-            genre_tracks.sort(key=operator.itemgetter('playCount'))
-            for track in genre_tracks:
-                if len(least_played_tracks) < number_of_tracks:
-                    least_played_tracks.append(track['id'])
-                else:
-                    break
-
+        genre_tracks.sort(key=operator.itemgetter('id'))
+        genre_tracks.sort(key=operator.itemgetter('playCount'))
+        for track in genre_tracks:
+            if 'rating' in track.keys():
+                if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
+                    if len(least_played_tracks) < number_of_tracks:
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
+                        least_played_tracks.append(track['id'])
+                    else:
+                        break
+                        
         # Call function to add songs to playlist
         if self.AddSongsToPlaylist(playlists, genre + ' Least Played', least_played_tracks):
             print "Done!"
