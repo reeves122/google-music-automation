@@ -313,7 +313,7 @@ class GoogleMusic_Util(object):
             print 'Scrobbling track:', \
                 track['artist'], '-', \
                 track['title'], '-', \
-                datetime.datetime.fromtimestamp(float(time_played))
+                datetime.fromtimestamp(float(time_played))
 
             lastfm.scrobble(artist=track['artist'],
                             title=track['title'],
