@@ -37,18 +37,25 @@ from datetime import datetime, timedelta
 
 class GoogleMusic_Util(object):
 
-    def __init__(self):
-        try:
-            google_username = os.environ.get('USERNAME')
-            google_password = os.environ.get('PASSWORD')
+    def __init__(self, login=True, dry_run=False):
+        if login:
+            try:
+                google_username = os.environ.get('USERNAME')
+                google_password = os.environ.get('PASSWORD')
 
-            api = Mobileclient()
-            api.login(google_username, google_password, Mobileclient.FROM_MAC_ADDRESS)
-            if api.is_authenticated():
-                self.api = api
-        except:
-            print "ERROR: Unable to login with the credentials provided!"
-            sys.exit(1)
+                api = Mobileclient()
+                api.login(google_username, google_password,
+                          Mobileclient.FROM_MAC_ADDRESS)
+                if api.is_authenticated():
+                    self.api = api
+            except:
+                print "ERROR: Unable to login with the credentials provided!"
+                sys.exit(1)
+        if dry_run == True:
+            print "Dry-run mode enabled. Logging only. No changes will be made."
+            self.dry_run = True
+        else:
+            self.dry_run = False
 
     def AddSongsToPlaylist(self, playlist_name, list_of_songs):
         # Dont continue if new list is empty
