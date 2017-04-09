@@ -229,6 +229,28 @@ class GoogleMusic_Util(object):
         except:
             print "There was a problem scrobbling the track."
     def ArtistPlaylist(self, library, playlists, artist, number_of_tracks=999):
+    def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
+        print "Creating playlist of most played unrated tracks"
+        unrated_tracks = []
+        random.shuffle(library)
+        library.sort(key=operator.itemgetter('playCount'), reverse=True)
+        for track in library:
+            if 'rating' in track.keys():
+                if track['rating'] == '0' or track['rating'] == '3':  # 0 or 3 stars is unrated
+                    if len(unrated_tracks) < number_of_tracks:
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                        unrated_tracks.append(track['id'])
+                    else:
+                        break
+
+        # Call function to add songs to playlist
+        if self.AddSongsToPlaylist(playlists, 'Unrated', unrated_tracks):
+            print "Done!"
+        else:
+            print "Failed!"
+
+    def ArtistPlaylist(self, library, playlists, artist, number_of_tracks=1000):
         print "Creating playlist of tracks by artist: " + artist
         artist_tracks = []
         for track in library:
