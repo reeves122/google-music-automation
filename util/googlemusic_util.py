@@ -251,7 +251,8 @@ class GoogleMusic_Util(object):
             if 'rating' in track.keys():
                 if track['rating'] != '1': # 1 stars is thumbs down
                     if len(tracks_to_add) < number_of_tracks:
-                        # print track['playCount'].__str__() + ': ' + track['artist'] + '-' + track['album'] + '-' + track['title']
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
                         tracks_to_add.append(track['id'])
                     else:
                         break
