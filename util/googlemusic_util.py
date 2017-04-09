@@ -228,3 +228,20 @@ class GoogleMusic_Util(object):
             time.sleep(1)
         except:
             print "There was a problem scrobbling the track."
+    def UpdateLastPlayedDB(self, track):
+        # Accepts one track (which is a new play) and updates the LastPlayed file.
+        file_name = 'last_played.json'
+        items = {}
+        # Open tracks from previous run json file
+        with open(file_name) as f:
+                items = json.load(f)
+
+        # Add current track to DB
+        items[track['id']] = time.time()
+
+        # Write out JSON file
+        with open(file_name, 'wb') as fp:
+            json.dump(items, fp)
+            fp.write('\n')
+
+        print "Wrote " + len(items).__str__() + " total tracks to " + file_name
