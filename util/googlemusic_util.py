@@ -456,6 +456,34 @@ class GoogleMusic_Util(object):
             print "Done!"
         else:
             print "Failed!"
+
+    def NotRecentlyPlayed(self, library, playlists, within_days=90, number_of_tracks=1000, excluded_genres=None):
+        genre_tracks.sort(key=operator.itemgetter('id'))
+        genre_tracks.sort(key=operator.itemgetter('lastPlayed'))
+
+        not_recently_played = []
+        for track in library:
+            if 'rating' in track.keys():
+                if track['rating'] == '4' or track['rating'] == '5':  # 4-5 stars is thumbs up
+                    if excluded_genres is not None:
+                        if track['genre'] not in excluded_genres:
+                            if len(not_recently_played) < number_of_tracks:
+                                if self.dry_run:
+                                    print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                                not_recently_played.append(track['id'])
+                            else:
+                                break
+                    else:
+                        if len(not_recently_played) < number_of_tracks:
+                            not_recently_played.append(track['id'])
+                        else:
+                            break
+
+        # Call function to add songs to playlist
+        if self.AddSongsToPlaylist(playlists, 'Thumbs Up Not Recently Played', not_recently_played):
+            print "Done!"
+        else:
+            print "Failed!"
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
