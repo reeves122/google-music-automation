@@ -245,3 +245,22 @@ class GoogleMusic_Util(object):
             fp.write('\n')
 
         print "Wrote " + len(items).__str__() + " total tracks to " + file_name
+
+    def LoadLastPlayedDB(self, library):
+        # Loads the last_played DB and overlays it on the library
+        file_name = 'last_played.json'
+        items = {}
+        tracks_appended = 0
+        # Open tracks from previous run json file
+        with open(file_name) as f:
+                items = json.load(f)
+
+        for track in library:
+            if track['id'] in items:
+                track['lastPlayed'] = items[track['id']]
+                tracks_appended += 1
+            else:
+                track['lastPlayed'] = 0.0
+
+        print "Last Played info retrieved for",tracks_appended,"tracks."
+        return library
