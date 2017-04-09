@@ -649,9 +649,7 @@ class GoogleMusic_Util(object):
                 artist_tracks.append(track)
 
         print "Found " + len(artist_tracks).__str__() + " tracks by artist: " + artist
-
         tracks_to_add = []
-
         artist_tracks.sort(key=operator.itemgetter('trackNumber'))
         try:
             # Sort by year and then album name
@@ -665,7 +663,11 @@ class GoogleMusic_Util(object):
                 if track['rating'] != '1': # 1 stars is thumbs down
                     if len(tracks_to_add) < number_of_tracks:
                         if self.dry_run:
-                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                            print 'Plays:', track['playCount'], ' - ', \
+                                            track['artist'].encode('utf-8'), ' - ', \
+                                            track['album'].encode('utf-8'), ' - ', \
+                                             track['title'].encode('utf-8'), ' - ', \
+                                            datetime.fromtimestamp(float(track['lastPlayed']))
                         tracks_to_add.append(track['id'])
                     else:
                         break
