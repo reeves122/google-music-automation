@@ -228,6 +228,40 @@ class GoogleMusic_Util(object):
             time.sleep(1)
         except:
             print "There was a problem scrobbling the track."
+    def ArtistPlaylist(self, library, playlists, artist, number_of_tracks=999):
+        print "Creating playlist of tracks by artist: " + artist
+        artist_tracks = []
+        for track in library:
+            if track['artist'] == artist:
+                artist_tracks.append(track)
+
+        print "Found " + len(artist_tracks).__str__() + " tracks by artist: " + artist
+
+        tracks_to_add = []
+
+        artist_tracks.sort(key=operator.itemgetter('trackNumber'))
+        try:
+            # Sort by year and then album name
+            artist_tracks.sort(key=operator.itemgetter('year', 'album'), reverse=True)
+        except:
+            # If year doesnt exist, just sort by album
+            artist_tracks.sort(key=operator.itemgetter('album'), reverse=True)
+
+        for track in artist_tracks:
+            if 'rating' in track.keys():
+                if track['rating'] != '1': # 1 stars is thumbs down
+                    if len(tracks_to_add) < number_of_tracks:
+                        # print track['playCount'].__str__() + ': ' + track['artist'] + '-' + track['album'] + '-' + track['title']
+                        tracks_to_add.append(track['id'])
+                    else:
+                        break
+
+        # Call function to add songs to playlist
+        if self.AddSongsToPlaylist(playlists, artist, tracks_to_add):
+            print "Done!"
+        else:
+            print "Failed!"
+
     def UpdateLastPlayedDB(self, track):
         # Accepts one track (which is a new play) and updates the LastPlayed file.
         file_name = 'last_played.json'
