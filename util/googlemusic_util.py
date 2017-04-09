@@ -57,8 +57,8 @@ class GoogleMusic_Util(object):
             return False
 
         # Dont continue if new list contains too many songs
-        if len(list_of_songs) > 999:
-            print 'ERROR: List contains more than 999 songs!'
+        if len(list_of_songs) > 1000:
+            print 'ERROR: List contains more than 1000 songs!'
             return False
 
         # Get a list of all the user's playlists
