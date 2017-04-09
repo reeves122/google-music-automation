@@ -57,7 +57,7 @@ class GoogleMusic_Util(object):
         else:
             self.dry_run = False
 
-    def AddSongsToPlaylist(self, playlist_name, list_of_songs):
+    def AddSongsToPlaylist(self, playlists, playlist_name, list_of_songs, batch_size=100):
         # Dont continue if new list is empty
         if len(list_of_songs) < 1:
             print 'ERROR: No songs to add!'
