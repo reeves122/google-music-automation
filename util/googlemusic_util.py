@@ -308,8 +308,7 @@ class GoogleMusic_Util(object):
                 except:
                     continue
 
-        print len(new_plays).__str__() + ' new plays found!'
-        print
+        print len(new_plays).__str__() + ' new plays found.'
         return new_plays
 
     def ScrobbleTrack(self, track):
