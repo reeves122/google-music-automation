@@ -588,6 +588,36 @@ class GoogleMusic_Util(object):
             print "Done!"
         else:
             print "Failed!"
+
+    def UnratedByGenre(self, library, playlists, genre, number_of_tracks=999):
+        print "Creating playlist of unrated tracks in genre: " + genre
+        genre_tracks = []
+        for track in library:
+            if track['genre'] == genre:
+                genre_tracks.append(track)
+
+        print "Found " + len(genre_tracks).__str__() + " tracks in genre: " + genre
+
+        unrated_tracks = []
+        random.shuffle(genre_tracks)
+        genre_tracks.sort(key=operator.itemgetter('playCount'), reverse=True)
+        for track in genre_tracks:
+            if 'rating' in track.keys():
+                if track['rating'] == '0' or track['rating'] == '3':  # 0 or 3 stars is unrated
+                    if len(unrated_tracks) < number_of_tracks:
+                        if self.dry_run:
+                            print 'Plays:', track['playCount'], ' - ', track['artist'], ' - ', track['title'], ' - ', datetime.fromtimestamp(float(track['lastPlayed']))
+                        unrated_tracks.append(track['id'])
+                    else:
+                        break
+
+
+        # Call function to add songs to playlist
+        if self.AddSongsToPlaylist(playlists, genre + ' Unrated', unrated_tracks):
+            print "Done!"
+        else:
+            print "Failed!"
+
     def UnratedPlaylist(self, library, playlists, number_of_tracks=1000):
         print "Creating playlist of most played unrated tracks"
         unrated_tracks = []
