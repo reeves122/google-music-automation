@@ -139,13 +139,16 @@ class GoogleMusic_Util(object):
                     break
 
         print len(list_of_tracks).__str__() + ' tracks removed from playlist.'
+
+    def LoadLocalJSON(self, file_name):
+        # Open tracks from previous run json file
         try:
             with open(file_name) as f:
-                library = []
+                items = []
                 for line in f:
-                    library.append(json.loads(line))
-            print len(library), 'tracks detected.'
-            return library
+                    items.append(json.loads(line))
+            print len(items[0]), 'items detected in file: ' + file_name
+            return items[0]
         except:
             print "ERROR: Unable to load local library file!"
 
