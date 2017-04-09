@@ -178,7 +178,7 @@ class GoogleMusic_Util(object):
 
         # Write header row
         writer = csv.writer(f, delimiter=',')
-        writer.writerow(('Artist', 'Album', 'Title', 'Genre', 'Plays', 'Rating'))
+        writer.writerow(('Artist', 'Album', 'Title', 'Genre', 'Plays', 'Rating', 'Last Played'))
 
         # Write each track to CSV
         for track in list_of_tracks:
@@ -214,8 +214,13 @@ class GoogleMusic_Util(object):
             except:
                 rating = ''
 
+            try:
+                lastPlayed = (track['lastPlayed']).encode('utf-8')
+            except:
+                lastPlayed = ''
 
-            writer.writerow((artist, album, title, genre, plays, rating))
+
+            writer.writerow((artist, album, title, genre, plays, rating, lastPlayed))
 
         f.close()
         print "Wrote " + len(list_of_tracks).__str__() + " total tracks to " + csv_file
